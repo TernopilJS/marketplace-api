@@ -1,0 +1,11 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <include file="0002_domains/password.sql"/>
+    <include file="0002_domains/email.sql"/>
+    <include file="0002_domains/phone.sql"/>
+    <include file="0002_domains/strings.sql"/>
+    <include file="0002_domains/timestamps.sql"/>
+</databaseChangeLog>
