@@ -1,6 +1,6 @@
 --liquibase formatted sql
 
---changeset oleh:0003_users_view splitStatements:false
+--changeset oleh:0004_views.users splitStatements:false
 
 CREATE VIEW views.users AS
 SELECT  u.id,
