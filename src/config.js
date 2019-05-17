@@ -11,7 +11,11 @@ export default {
   },
 
   hash: {
-    default: 'argon2',
+    default: 'bcrypt',
+
+    bcrypt: {
+      saltRounds: 10,
+    },
 
     argon2: {
       hashLength: 256,
