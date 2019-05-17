@@ -1,4 +1,4 @@
-import { argon2id } from 'argon2';
+// import { argon2id } from 'argon2';
 import os from 'os';
 
 export default {
@@ -19,7 +19,7 @@ export default {
       memoryCost: 2 ** 16,
       timeCost: 20,
       parallelism: os.cpus().length * 2,
-      type: argon2id,
+      // type: argon2id,
     },
   },
 

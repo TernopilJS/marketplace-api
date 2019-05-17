@@ -41,7 +41,9 @@ async function register(fastify) {
       const hashFunc = config.hash.default;
 
       try {
-        const passwordHash = await passwords.hash(hashFunc, password);
+        const passwordHash = await passwords.hash(
+          /* hashFunc, */ password,
+        );
         const newUser = await get(
           `
           INSERT INTO

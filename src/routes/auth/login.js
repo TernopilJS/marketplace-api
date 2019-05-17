@@ -46,7 +46,7 @@ async function login(fastify) {
       }
 
       const passwordMatches = await passwords.compare(
-        user.passwordHashType,
+        // user.passwordHashType,
         password,
         user.passwordHash.toString('utf-8'),
       );
