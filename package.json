@@ -14,7 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
-    "argon2": "^0.23.0",
+    "bcrypt": "^3.0.6",
     "fastify": "^2.3.0",
     "fastify-jwt": "^0.10.0",
     "fastify-swagger": "^2.4.0",

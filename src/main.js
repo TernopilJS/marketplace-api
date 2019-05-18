@@ -28,9 +28,7 @@ server.register(fastifySwagger, {
     schemes: ['http'],
     consumes: ['application/json'],
     produces: ['application/json'],
-    tags: [
-      { name: 'user', description: 'User related end-points' },
-    ],
+    tags: [{ name: 'user', description: 'User related end-points' }],
   },
   exposeRoute: true,
 });
@@ -44,6 +42,7 @@ const start = async () => {
     await server.listen(config.port);
   } catch (err) {
     server.log.error(err);
+    console.log(err);
     process.exit(1);
   }
 };
