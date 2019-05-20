@@ -2,9 +2,12 @@
   "name": "apiko-spring-courses-api",
   "version": "0.1.0",
   "description": "API for Apiko spring courses 2019",
-  "main": "index.js",
+  "main": "build/main.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node build/main.js",
+    "clean": "rm -rf build && mkdir build",
+    "build-server": "node_modules/.bin/babel src -d ./build",
+    "build": "npm run clean && npm run build-server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
