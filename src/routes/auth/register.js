@@ -26,6 +26,7 @@ async function register(fastify) {
             user: {
               type: 'object',
               properties: {
+                id: { type: 'string' },
                 fullName: { type: 'string' },
                 email: { type: 'string' },
                 avatar: { type: ['string', 'null'] },
@@ -62,9 +63,10 @@ async function register(fastify) {
       } catch (error) {
         if (error.constraint === 'user_email_unique') {
           res.status(403).send({ error: 'email already used' });
+          return;
         }
 
-        throw new Error(error);
+        throw error;
       }
     },
   });

@@ -23,6 +23,7 @@ async function login(fastify) {
             user: {
               type: 'object',
               properties: {
+                id: { type: 'string' },
                 fullName: { type: 'string' },
                 email: { type: 'string' },
                 avatar: { type: ['string', 'null'] },
@@ -43,6 +44,7 @@ async function login(fastify) {
 
       if (!user) {
         res.status(404).send({ error: 'user not found' });
+        return;
       }
 
       const passwordMatches = await passwords.compare(
@@ -53,6 +55,7 @@ async function login(fastify) {
 
       if (!passwordMatches) {
         res.status(401).send({ error: 'wrong password' });
+        return;
       }
 
       const token = fastify.jwt.sign({

@@ -1,37 +1,13 @@
 import auth from './auth';
 import account from './account';
+import products from './products';
+import users from './users';
 
 async function declareRouters(fastify, options) {
   fastify.register(auth, options);
   fastify.register(account, options);
+  fastify.register(products, options);
+  fastify.register(users, options);
 }
 
 export default declareRouters;
-
-// POST /auth/register
-// body: {
-//   fullName: string,
-//   email: string,
-//   password: string,
-// }
-
-// POST /auth/login
-// body: {
-//   email: string,
-//   password: string,
-// }
-
-// GET /account/user
-// res: {
-//   avatar: string,
-//   fullName: string,
-//   email: string,
-//   phone: string,
-// }
-
-// PUT /account/user
-// body: {
-//   avatar?: string,
-//   fullName?: string,
-//   phone?: string,
-// }

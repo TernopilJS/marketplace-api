@@ -12,6 +12,7 @@ async function account(fastify) {
         200: {
           type: 'object',
           properties: {
+            id: { type: 'string' },
             fullName: { type: 'string' },
             email: { type: 'string' },
             avatar: { type: ['string', 'null'] },
@@ -28,6 +29,7 @@ async function account(fastify) {
 
       if (!user) {
         res.status(404).send({ error: 'user not found' });
+        return;
       }
 
       res.send(user);
@@ -51,6 +53,7 @@ async function account(fastify) {
         200: {
           type: 'object',
           properties: {
+            id: { type: 'string' },
             fullName: { type: 'string' },
             email: { type: 'string' },
             avatar: { type: ['string', 'null'] },
@@ -75,6 +78,7 @@ async function account(fastify) {
 
       if (!updatedUser) {
         res.status(404).send({ error: 'user not found' });
+        return;
       }
 
       res.send(updatedUser);
