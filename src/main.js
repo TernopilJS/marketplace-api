@@ -39,7 +39,7 @@ server.register(declareRouters);
 // Run the server!
 const start = async () => {
   try {
-    await server.listen(config.port);
+    await server.listen(config.port, '0.0.0.0');
   } catch (err) {
     server.log.error(err);
     console.log(err);
