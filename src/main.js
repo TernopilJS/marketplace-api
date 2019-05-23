@@ -2,6 +2,7 @@ import '@babel/polyfill';
 import fastify from 'fastify';
 import fastifySwagger from 'fastify-swagger';
 import fastifyJwt from 'fastify-jwt';
+import multipart from 'fastify-multipart';
 import declareRouters from './routes';
 import config from './config';
 
@@ -14,6 +15,9 @@ const server = fastify({
 server.register(fastifyJwt, {
   secret: config.app.secret1,
 });
+
+// register multipart
+server.register(multipart);
 
 // register dynamic swagger docs
 server.register(fastifySwagger, {

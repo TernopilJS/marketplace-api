@@ -1,4 +1,5 @@
 import { get } from '../../services/database';
+import { userSchemas } from '../../schemas';
 
 async function account(fastify) {
   fastify.addHook('onRequest', async (req) => req.jwtVerify());
@@ -9,16 +10,7 @@ async function account(fastify) {
     schema: {
       tags: ['user'],
       response: {
-        200: {
-          type: 'object',
-          properties: {
-            id: { type: 'string' },
-            fullName: { type: 'string' },
-            email: { type: 'string' },
-            avatar: { type: ['string', 'null'] },
-            phone: { type: ['string', 'null'] },
-          },
-        },
+        200: userSchemas.user,
       },
     },
     handler: async (req, res) => {
@@ -50,16 +42,7 @@ async function account(fastify) {
         },
       },
       response: {
-        200: {
-          type: 'object',
-          properties: {
-            id: { type: 'string' },
-            fullName: { type: 'string' },
-            email: { type: 'string' },
-            avatar: { type: ['string', 'null'] },
-            phone: { type: ['string', 'null'] },
-          },
-        },
+        200: userSchemas.user,
       },
     },
     handler: async (req, res) => {

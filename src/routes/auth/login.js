@@ -1,5 +1,6 @@
 import { get } from '../../services/database';
 import passwords from '../../services/passwords';
+import { userSchemas } from '../../schemas';
 
 async function login(fastify) {
   fastify.route({
@@ -20,16 +21,7 @@ async function login(fastify) {
           type: 'object',
           properties: {
             token: { type: 'string' },
-            user: {
-              type: 'object',
-              properties: {
-                id: { type: 'string' },
-                fullName: { type: 'string' },
-                email: { type: 'string' },
-                avatar: { type: ['string', 'null'] },
-                phone: { type: ['string', 'null'] },
-              },
-            },
+            user: userSchemas.user,
           },
         },
       },

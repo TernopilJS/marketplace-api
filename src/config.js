@@ -10,6 +10,12 @@ export default {
     secret2: process.env.SECRET2 || 'APIKO_SIKRIT2',
   },
 
+  cloudinary: {
+    cloud_name: process.env.CLOUDINARY_NAME,
+    api_key: process.env.CLOUDINARY_KEY,
+    api_secret: process.env.CLOUDINARY_SECRET,
+  },
+
   hash: {
     default: 'bcrypt',
 

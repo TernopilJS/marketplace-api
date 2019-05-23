@@ -1,5 +1,6 @@
 import _ from 'lodash/fp';
 import { getList } from '../../services/database';
+import { productSchemas } from '../../schemas';
 
 async function productsRoutes(fastify) {
   fastify.route({
@@ -13,28 +14,7 @@ async function productsRoutes(fastify) {
           properties: {
             list: {
               type: 'array',
-              items: {
-                type: 'object',
-                properties: {
-                  id: { type: 'string' },
-                  ownerId: { type: 'string' },
-                  title: { type: 'string' },
-                  description: { type: ['string', 'null'] },
-                  photos: {
-                    anyOf: [
-                      { type: 'null' },
-                      {
-                        type: 'array',
-                        items: { type: 'string' },
-                      },
-                    ],
-                  },
-                  location: { type: 'string' },
-                  price: { type: 'number' },
-                  createdAt: { type: 'number' },
-                  updatedAt: { type: ['number', 'null'] },
-                },
-              },
+              items: productSchemas.product,
             },
             count: { type: 'number' },
           },
