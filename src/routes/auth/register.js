@@ -2,6 +2,7 @@ import uuid from 'uuid/v4';
 import { get } from '../../services/database';
 import passwords from '../../services/passwords';
 import config from '../../config';
+import { userSchemas } from '../../schemas';
 
 async function register(fastify) {
   fastify.route({
@@ -23,15 +24,7 @@ async function register(fastify) {
           type: 'object',
           properties: {
             token: { type: 'string' },
-            user: {
-              type: 'object',
-              properties: {
-                fullName: { type: 'string' },
-                email: { type: 'string' },
-                avatar: { type: ['string', 'null'] },
-                phone: { type: ['string', 'null'] },
-              },
-            },
+            user: userSchemas.user,
           },
         },
       },
@@ -62,9 +55,10 @@ async function register(fastify) {
       } catch (error) {
         if (error.constraint === 'user_email_unique') {
           res.status(403).send({ error: 'email already used' });
+          return;
         }
 
-        throw new Error(error);
+        throw error;
       }
     },
   });

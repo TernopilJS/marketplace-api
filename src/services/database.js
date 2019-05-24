@@ -49,7 +49,7 @@ export async function get(...params) {
 
 export async function getList(...params) {
   const result = await query(...params);
-  const arr = _.get('rows', [])(result);
+  const arr = _.getOr([], 'rows')(result);
 
   return arr.map(camelizeObject);
 }

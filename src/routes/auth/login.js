@@ -1,5 +1,6 @@
 import { get } from '../../services/database';
 import passwords from '../../services/passwords';
+import { userSchemas } from '../../schemas';
 
 async function login(fastify) {
   fastify.route({
@@ -20,15 +21,7 @@ async function login(fastify) {
           type: 'object',
           properties: {
             token: { type: 'string' },
-            user: {
-              type: 'object',
-              properties: {
-                fullName: { type: 'string' },
-                email: { type: 'string' },
-                avatar: { type: ['string', 'null'] },
-                phone: { type: ['string', 'null'] },
-              },
-            },
+            user: userSchemas.user,
           },
         },
       },
@@ -43,6 +36,7 @@ async function login(fastify) {
 
       if (!user) {
         res.status(404).send({ error: 'user not found' });
+        return;
       }
 
       const passwordMatches = await passwords.compare(
@@ -53,6 +47,7 @@ async function login(fastify) {
 
       if (!passwordMatches) {
         res.status(401).send({ error: 'wrong password' });
+        return;
       }
 
       const token = fastify.jwt.sign({
