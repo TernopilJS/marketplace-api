@@ -3,24 +3,26 @@ import fastify from 'fastify';
 import fastifySwagger from 'fastify-swagger';
 import fastifyJwt from 'fastify-jwt';
 import multipart from 'fastify-multipart';
+import SocketServer from 'socket.io';
+import sockets from './services/sockets';
 import declareRouters from './routes';
 import config from './config';
 
 // create server
-const server = fastify({
+const app = fastify({
   logger: true,
 });
 
 // register jwt
-server.register(fastifyJwt, {
+app.register(fastifyJwt, {
   secret: config.app.secret1,
 });
 
 // register multipart
-server.register(multipart);
+app.register(multipart);
 
 // register dynamic swagger docs
-server.register(fastifySwagger, {
+app.register(fastifySwagger, {
   swagger: {
     info: {
       title: 'Apiko API',
@@ -38,14 +40,21 @@ server.register(fastifySwagger, {
 });
 
 // Declare a routes
-server.register(declareRouters);
+app.register(declareRouters);
+
+// create socket server
+const io = new SocketServer(app.server, {
+  pingTimeout: 5000,
+  pingInterval: 1000,
+});
+app.register(sockets.init, { io });
 
 // Run the server!
 const start = async () => {
   try {
-    await server.listen(config.port, '0.0.0.0');
+    await app.listen(config.port, '0.0.0.0');
   } catch (err) {
-    server.log.error(err);
+    app.log.error(err);
     console.log(err);
     process.exit(1);
   }

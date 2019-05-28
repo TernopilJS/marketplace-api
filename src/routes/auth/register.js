@@ -54,7 +54,7 @@ async function register(fastify) {
         res.send({ token, user: newUser });
       } catch (error) {
         if (error.constraint === 'user_email_unique') {
-          res.status(403).send({ error: 'email already used' });
+          res.status(409).send({ error: 'email already used' });
           return;
         }
 

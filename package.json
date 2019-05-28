@@ -26,6 +26,7 @@
     "fastify-swagger": "^2.4.0",
     "lodash": "^4.17.11",
     "pg": "^7.11.0",
+    "socket.io": "^2.2.0",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
