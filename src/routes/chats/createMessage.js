@@ -1,4 +1,5 @@
 import { get } from '../../services/database';
+import sockets from '../../services/sockets';
 import { chatSchemas } from '../../schemas';
 
 async function createMessage(fastify) {
@@ -23,19 +24,31 @@ async function createMessage(fastify) {
       const { text } = req.body;
 
       try {
-        const messages = await get(
+        const message = await get(
           `
-            INSERT INTO
-            chat.messages(id, chat_id, owner_id, text)
-            VALUES (seq.next_message_id($1), $1, $2, $3)
-            ON CONFLICT ON CONSTRAINT messages_pk
-              DO UPDATE SET id = seq.next_message_id($1)
-            RETURNING *;
+            WITH insert_data as (
+              INSERT INTO
+              chat.messages(id, chat_id, owner_id, text)
+              VALUES (seq.next_message_id($1), $1, $2, $3)
+              ON CONFLICT ON CONSTRAINT messages_pk
+                DO UPDATE SET id = seq.next_message_id($1)
+              RETURNING *
+            )
+            SELECT i.*, c.participants
+            FROM insert_data as i
+              LEFT JOIN chat.chats AS c ON (c.id = i.chat_id)
           `,
           [chatId, userId, text],
         );
 
-        res.send(messages);
+        const { participants } = message;
+        if (Array.isArray(participants)) {
+          participants.forEach((toUser) => {
+            sockets.sendMessage(toUser, message);
+          });
+        }
+
+        res.send(message);
       } catch (error) {
         if (error.constraint === 'message_owner_fk') {
           res.status(403).send({ error: 'Unauthorized' });
