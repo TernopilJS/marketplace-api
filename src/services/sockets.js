@@ -16,20 +16,28 @@ class SocketsService {
         socket.join(userId);
         return next();
       } catch (err) {
-        console.log(err);
         return next(new Error('not valid token'));
       }
     });
   }
 
-  sendMessage(userId, data) {
-    if (!this.io) return;
-    this.io.to(userId).emit('message', data);
+  sendTo(rooms, event, data) {
+    if (!this.io || !rooms) return;
+
+    if (Array.isArray(rooms)) {
+      const to = rooms.reduce((socket, room) => socket.to(room), this.io);
+      to.emit(event, data);
+    } else {
+      this.io.to(rooms).emit(event, data);
+    }
   }
 
-  sendEvent(userId, data) {
-    if (!this.io) return;
-    this.io.to(userId).emit('event', data);
+  sendMessage(rooms, data) {
+    this.sendTo(rooms, 'message', data);
+  }
+
+  sendEvent(rooms, data) {
+    this.sendTo(rooms, 'event', data);
   }
 }
 

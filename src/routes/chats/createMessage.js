@@ -1,3 +1,4 @@
+import fastJson from 'fast-json-stringify';
 import { get } from '../../services/database';
 import sockets from '../../services/sockets';
 import { chatSchemas } from '../../schemas';
@@ -41,11 +42,13 @@ async function createMessage(fastify) {
           [chatId, userId, text],
         );
 
-        const { participants } = message;
-        if (Array.isArray(participants)) {
-          participants.forEach((toUser) => {
-            sockets.sendMessage(toUser, message);
-          });
+        try {
+          sockets.sendMessage(
+            message.participants,
+            fastJson(chatSchemas.message)(message),
+          );
+        } catch (error) {
+          // do nothing
         }
 
         res.send(message);
