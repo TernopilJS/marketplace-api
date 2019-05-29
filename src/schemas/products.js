@@ -24,7 +24,8 @@ export const product = {
 export const productWithUser = {
   type: 'object',
   properties: {
-    ..._.omit('ownerId')(product.properties),
+    // prettier-ignore
+    ...(_.omit('ownerId')(product.properties)),
     chatId: { type: ['string', 'null'] },
     owner: user,
   },
