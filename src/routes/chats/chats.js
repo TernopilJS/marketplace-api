@@ -13,6 +13,7 @@ async function getChats(fastify) {
           items: chatSchemas.chatWithProductAndMessage,
         },
       },
+      security: [{ bearerAuth: [] }],
     },
     handler: async (req, res) => {
       const { userId } = req.user;

@@ -9,6 +9,7 @@ async function uploadImages(fastify) {
       response: {
         200: { type: 'string' },
       },
+      security: [{ bearerAuth: [] }],
     },
     onRequest: async (req) => req.jwtVerify(),
     handler: async (req, res) => {

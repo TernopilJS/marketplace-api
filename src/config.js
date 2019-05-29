@@ -2,8 +2,9 @@
 import os from 'os';
 
 export default {
-  host: 'localhost',
+  host: process.env.HOST || 'localhost',
   port: process.env.PORT || 8080,
+  protocol: process.env.NODE_ENV === 'production' ? 'https' : 'http',
 
   app: {
     secret1: process.env.SECRET1 || 'APIKO_SIKRIT1',

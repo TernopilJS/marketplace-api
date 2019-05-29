@@ -7,12 +7,19 @@ async function getMessages(fastify) {
     url: '/chats/:chatId/messages',
     schema: {
       tags: ['chat'],
+      params: {
+        type: 'object',
+        properties: {
+          chatId: { type: 'string' },
+        },
+      },
       response: {
         200: {
           type: 'array',
           items: chatSchemas.message,
         },
       },
+      security: [{ bearerAuth: [] }],
     },
     handler: async (req, res) => {
       const { chatId } = req.params;

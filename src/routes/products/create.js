@@ -25,6 +25,7 @@ async function createProduct(fastify) {
       response: {
         200: productSchemas.product,
       },
+      security: [{ bearerAuth: [] }],
     },
     onRequest: async (req) => req.jwtVerify(),
     handler: async (req, res) => {
