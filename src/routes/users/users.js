@@ -8,6 +8,12 @@ async function productsRoutes(fastify) {
     url: '/users/:userId/products',
     schema: {
       tags: ['products'],
+      params: {
+        type: 'object',
+        properties: {
+          userId: { type: 'string' },
+        },
+      },
       response: {
         200: {
           type: 'object',
@@ -21,7 +27,6 @@ async function productsRoutes(fastify) {
         },
       },
     },
-    onRequest: async (req) => req.jwtVerify(),
     handler: async (req, res) => {
       const { userId } = req.params;
       const products = await getList(

@@ -1,6 +1,6 @@
 import '@babel/polyfill';
 import fastify from 'fastify';
-import fastifySwagger from 'fastify-swagger';
+import fastifyOAS from 'fastify-oas';
 import fastifyJwt from 'fastify-jwt';
 import multipart from 'fastify-multipart';
 import SocketServer from 'socket.io';
@@ -21,20 +21,27 @@ app.register(fastifyJwt, {
 // register multipart
 app.register(multipart);
 
-// register dynamic swagger docs
-app.register(fastifySwagger, {
+// register dynamic OpenAPI (swagger) docs
+app.register(fastifyOAS, {
   swagger: {
     info: {
       title: 'Apiko API',
       description: 'API for Apiko spring courses 2019',
       version: '0.1.0',
     },
-    host: config.host,
-    port: config.port,
-    schemes: ['http'],
+    servers: [{ url: config.url }],
     consumes: ['application/json'],
     produces: ['application/json'],
     tags: [{ name: 'user', description: 'User related end-points' }],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    },
   },
   exposeRoute: true,
 });

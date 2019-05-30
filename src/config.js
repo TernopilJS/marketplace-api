@@ -1,9 +1,17 @@
 // import { argon2id } from 'argon2';
 import os from 'os';
 
+const isProd = process.env.NODE_ENV === 'production';
+
+const host = process.env.HOST || 'localhost';
+const port = process.env.PORT || 8080;
+const protocol = isProd ? 'https' : 'http';
+
 export default {
-  host: 'localhost',
-  port: process.env.PORT || 8080,
+  host,
+  port,
+  protocol,
+  url: `${protocol}://${host}${isProd ? '' : `:${port}`}`,
 
   app: {
     secret1: process.env.SECRET1 || 'APIKO_SIKRIT1',

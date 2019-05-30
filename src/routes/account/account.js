@@ -12,6 +12,7 @@ async function account(fastify) {
       response: {
         200: userSchemas.user,
       },
+      security: [{ bearerAuth: [] }],
     },
     handler: async (req, res) => {
       const { userId } = req.user;
@@ -40,10 +41,12 @@ async function account(fastify) {
           fullName: { type: 'string' },
           phone: { type: 'string' },
         },
+        required: ['avatar', 'fullName', 'phone'],
       },
       response: {
         200: userSchemas.user,
       },
+      security: [{ bearerAuth: [] }],
     },
     handler: async (req, res) => {
       const { userId } = req.user;

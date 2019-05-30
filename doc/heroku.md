@@ -24,6 +24,10 @@ PGPORT
 PGUSER
 PGSSL: TRUE // set to true
 ```
+Also set the following `Config Vars`:
+```
+HOST: YOUR_HEROKU_PROJECT_NAME.herokuapp.com
+```
 
 ### Cloudinary
 To upload images or some other multimedia - create free account on [cloudinary](https://cloudinary.com/)

@@ -7,6 +7,12 @@ async function productById(fastify) {
     method: 'GET',
     url: '/products/:productId',
     schema: {
+      params: {
+        type: 'object',
+        properties: {
+          productId: { type: 'string' },
+        },
+      },
       tags: ['products'],
       response: {
         200: productSchemas.productWithUser,

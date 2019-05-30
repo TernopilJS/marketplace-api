@@ -8,9 +8,16 @@ async function createChat(fastify) {
     url: '/products/:productId/createChat',
     schema: {
       tags: ['chat'],
+      params: {
+        type: 'object',
+        properties: {
+          productId: { type: 'string' },
+        },
+      },
       response: {
         200: chatSchemas.chat,
       },
+      security: [{ bearerAuth: [] }],
     },
     onRequest: async (req) => req.jwtVerify(),
     handler: async (req, res) => {

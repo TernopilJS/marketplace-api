@@ -9,15 +9,23 @@ async function createMessage(fastify) {
     url: '/chats/:chatId/messages',
     schema: {
       tags: ['chat'],
+      params: {
+        type: 'object',
+        properties: {
+          chatId: { type: 'string' },
+        },
+      },
       body: {
         type: 'object',
         properties: {
           text: { type: 'string' },
         },
+        required: ['text'],
       },
       response: {
         200: chatSchemas.message,
       },
+      security: [{ bearerAuth: [] }],
     },
     handler: async (req, res) => {
       const { chatId } = req.params;

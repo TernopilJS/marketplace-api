@@ -24,7 +24,7 @@
     "fastify": "^2.3.0",
     "fastify-jwt": "^0.10.0",
     "fastify-multipart": "^1.0.0",
-    "fastify-swagger": "^2.4.0",
+    "fastify-oas": "^2.1.3",
     "lodash": "^4.17.11",
     "pg": "^7.11.0",
     "socket.io": "^2.2.0",
