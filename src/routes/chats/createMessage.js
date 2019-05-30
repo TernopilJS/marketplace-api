@@ -2,6 +2,7 @@ import fastJson from 'fast-json-stringify';
 import { get } from '../../services/database';
 import sockets from '../../services/sockets';
 import { chatSchemas } from '../../schemas';
+import { chatConstants } from '../../constants';
 
 async function createMessage(fastify) {
   fastify.route({
@@ -52,8 +53,11 @@ async function createMessage(fastify) {
 
         try {
           sockets.sendMessage(
-            message.participants,
-            fastJson(chatSchemas.message)(message),
+            [userId].concat(message.participants),
+            fastJson(chatSchemas.messageWithActionType)({
+              type: chatConstants.messageActions.ADD,
+              message,
+            }),
           );
         } catch (error) {
           // do nothing
