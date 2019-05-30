@@ -8,4 +8,6 @@
     <include file="0001_convenience/validation/html_escaped.sql" />
     <include file="0001_convenience/validation/trim_whitespace.sql" />
     <include file="0001_convenience/validation/not_blank.sql" />
+
+    <include file="0001_convenience/conversion/get_milliseconds.sql" />
 </databaseChangeLog>

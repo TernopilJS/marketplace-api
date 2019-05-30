@@ -5,4 +5,6 @@
 
     <include file="0004_views/users.sql"/>
     <include file="0004_views/products.sql"/>
+    <include file="0004_views/chats/messages.sql"/>
+    <include file="0004_views/chats/chats.sql"/>
 </databaseChangeLog>
