@@ -9,6 +9,11 @@
       "es6": true,
       "jest": false
     },
+    "settings": {
+      "import/resolver": {
+        "babel-module": {}
+      }
+    },
     "plugins": [],
     "rules": {
       "class-methods-use-this": 0,

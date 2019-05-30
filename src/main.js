@@ -5,49 +5,20 @@ import fastifyJwt from 'fastify-jwt';
 import multipart from 'fastify-multipart';
 import SocketServer from 'socket.io';
 import sockets from './services/sockets';
-import declareRouters from './routes';
+import modules from './modules';
+import swagger from './swagger';
 import config from './config';
 
 // create server
 const app = fastify({
   logger: true,
-});
-
-// register jwt
-app.register(fastifyJwt, {
-  secret: config.app.secret1,
-});
-
-// register multipart
-app.register(multipart);
-
-// register dynamic OpenAPI (swagger) docs
-app.register(fastifyOAS, {
-  swagger: {
-    info: {
-      title: 'Apiko API',
-      description: 'API for Apiko spring courses 2019',
-      version: '0.1.0',
-    },
-    servers: [{ url: config.url }],
-    consumes: ['application/json'],
-    produces: ['application/json'],
-    tags: [{ name: 'user', description: 'User related end-points' }],
-    components: {
-      securitySchemes: {
-        bearerAuth: {
-          type: 'http',
-          scheme: 'bearer',
-          bearerFormat: 'JWT',
-        },
-      },
-    },
-  },
-  exposeRoute: true,
-});
-
-// Declare a routes
-app.register(declareRouters);
+})
+  .register(fastifyJwt, {
+    secret: config.app.secret1,
+  })
+  .register(multipart)
+  .register(fastifyOAS, swagger)
+  .register(modules);
 
 // create socket server
 const io = new SocketServer(app.server, {
