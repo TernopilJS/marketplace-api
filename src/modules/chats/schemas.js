@@ -1,5 +1,5 @@
-import { product } from './products';
-import { chatConstants } from '../constants';
+import { product } from 'products/schemas';
+import { messageActions } from './constants';
 
 export const message = {
   type: 'object',
@@ -21,7 +21,7 @@ export const messageWithActionType = {
   properties: {
     type: {
       type: 'string',
-      enum: Object.values(chatConstants.messageActions),
+      enum: Object.values(messageActions),
     },
     message,
   },

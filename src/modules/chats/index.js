@@ -1,13 +1,21 @@
-import chats from './chats';
-import messages from './messages';
-import createMessage from './createMessage';
+import { requiredAuth } from 'auth/helpers';
+import * as schemas from './routesSchemas';
+import * as handlers from './handlers';
 
-async function routes(fastify, options) {
-  fastify.addHook('onRequest', async (req) => req.jwtVerify());
+async function routes(fastify) {
+  fastify.addHook('onRequest', requiredAuth);
 
-  fastify.register(chats, options);
-  fastify.register(messages, options);
-  fastify.register(createMessage, options);
+  fastify.get('/chats', { schema: schemas.getChats }, handlers.getChats);
+  fastify.post(
+    '/chats/:chatId/messages',
+    { schema: schemas.createMessage },
+    handlers.createMessage,
+  );
+  fastify.get(
+    '/chats/:chatId/messages',
+    { schema: schemas.getMessages },
+    handlers.getMessages,
+  );
 }
 
 export default routes;

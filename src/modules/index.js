@@ -1,9 +1,9 @@
-import auth from './auth';
-import account from './account';
-import products from './products';
-import users from './users';
-import upload from './upload';
-import chats from './chats';
+import auth from 'auth';
+import account from 'account';
+import products from 'products';
+import users from 'users';
+import upload from 'upload';
+import chats from 'chats';
 
 async function registerModules(fastify, options) {
   fastify.register(auth, options);

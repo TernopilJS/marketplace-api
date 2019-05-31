@@ -1,5 +1,5 @@
 import _ from 'lodash/fp';
-import { user } from './users';
+import * as userSchemas from 'users/schemas';
 
 export const product = {
   type: 'object',
@@ -27,6 +27,6 @@ export const productWithUser = {
     // prettier-ignore
     ...(_.omit('ownerId')(product.properties)),
     chatId: { type: ['string', 'null'] },
-    owner: user,
+    owner: userSchemas.user,
   },
 };

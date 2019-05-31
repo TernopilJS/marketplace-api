@@ -10,3 +10,11 @@ export const user = {
     updatedAt: { type: ['number', 'null'] },
   },
 };
+
+export const userWithToken = {
+  type: 'object',
+  properties: {
+    token: { type: 'string' },
+    user,
+  },
+};
