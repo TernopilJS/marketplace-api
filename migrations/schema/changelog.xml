@@ -10,5 +10,6 @@
     <include file="0002_domains/domains.xml"/>
     <include file="0003_tables/tables.xml"/>
     <include file="0004_views/views.xml"/>
+    <include file="0005_data/data.xml"/>
 
 </databaseChangeLog>

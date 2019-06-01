@@ -21,7 +21,7 @@ export async function createMessage(req, res) {
 
     try {
       sockets.sendMessage(
-        [userId].concat(message.participants),
+        message.participants,
         fastJson(schemas.messageWithActionType)({
           type: constants.messageActions.ADD,
           message,

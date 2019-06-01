@@ -1,4 +1,5 @@
 import { product } from 'products/schemas';
+import { user } from 'users/schemas';
 import { messageActions } from './constants';
 
 export const message = {
@@ -49,10 +50,14 @@ export const chatWithLastMessage = {
   },
 };
 
-export const chatWithProductAndMessage = {
+export const chatWithProductMessageParticipants = {
   type: 'object',
   properties: {
     ...chatWithLastMessage.properties,
     product,
+    participants: {
+      type: 'array',
+      items: user,
+    },
   },
 };

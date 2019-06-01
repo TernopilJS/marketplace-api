@@ -5,7 +5,7 @@ export const getChats = {
   response: {
     200: {
       type: 'array',
-      items: schemas.chatWithProductAndMessage,
+      items: schemas.chatWithProductMessageParticipants,
     },
   },
   security: [{ bearerAuth: [] }],
