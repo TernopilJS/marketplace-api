@@ -1,5 +1,9 @@
 # Apiko courses 2019 application API
 
+API - https://apiko-marketplace-api-2019.herokuapp.com/
+
+API Docs - https://apiko-marketplace-api-2019.herokuapp.com/documentation
+
 ## Local Server Installation
 
 Clone repository and install project dependencies

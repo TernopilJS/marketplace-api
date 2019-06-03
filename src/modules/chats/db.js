@@ -3,10 +3,20 @@ import { get, getList } from '../../services/database';
 export function getChats(userId) {
   return getList(
     `
-      SELECT * FROM views.chats_with_product_and_message as c
+      SELECT
+        c.*,
+        c.participants as participantsIds,
+        users.participants as participants
+      FROM views.chats_with_product_and_message as c
+        LEFT JOIN lateral (
+          SELECT
+            json_agg(u.user) as participants
+          FROM views.users_json as u
+          WHERE
+            array_remove(c.participants, $1) @> ARRAY[(u.user->>'id')::UUID]
+        ) AS users ON TRUE
       WHERE
-        c.owner_id = $1
-        OR ARRAY[$1] <@ c.participants
+        ARRAY[$1::UUID] <@ c.participants
     `,
     [userId],
   );
@@ -23,7 +33,7 @@ export function createMessage({ chatId, userId, text }) {
           DO UPDATE SET id = seq.next_message_id($1)
         RETURNING *
       )
-      SELECT i.*, c.participants
+      SELECT i.*, array_remove(c.participants, $2) as participants
       FROM insert_data as i
         LEFT JOIN chat.chats AS c ON (c.id = i.chat_id)
     `,
@@ -47,7 +57,7 @@ export function createChat({ id, productId, userId }) {
   return get(
     `
       WITH participant as (
-        SELECT ARRAY[p.owner_id] as participants
+        SELECT ARRAY[p.owner_id, $3] as participants
         FROM products as p
         WHERE p.id = $2
       )
