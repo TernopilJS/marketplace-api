@@ -53,3 +53,10 @@ export async function getList(...params) {
 
   return arr.map(camelizeObject);
 }
+
+export function sql(strings, ...options) {
+  return strings.reduce(
+    (acc, str, i) => acc.concat(str, options[i] || ''),
+    '',
+  );
+}

@@ -24,6 +24,16 @@ Follow your OS specific instructions:
 To upload images or some other multimedia - create free account on [cloudinary](https://cloudinary.com/)
 and paste your cloudinary configs into [config file](src/config.js#L13).
 
+### SQL syntax highlight in js files.
+
+Use [VS Code Extension](https://marketplace.visualstudio.com/items?itemName=dgadelha.vscode-sql-template-literal-with-prefixes) for
+Syntax highlighting for code like:
+
+```js
+const query = sql`SELECT * FROM users`;
+```
+
+
 ### Run server
 Start the server, e.g:
 ```bash
