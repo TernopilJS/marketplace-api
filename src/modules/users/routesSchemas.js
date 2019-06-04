@@ -35,5 +35,5 @@ export const getUser = {
   response: {
     200: schemas.user,
   },
-  description: 'Get user products',
+  description: 'Get user by id',
 };
