@@ -9,3 +9,16 @@ export async function getUserProducts(req, res) {
 
   res.send({ list: products, count });
 }
+
+export async function getUser(req, res) {
+  const { userId } = req.params;
+
+  const user = await db.getUser(userId);
+
+  if (!user) {
+    res.status(404).send({ error: 'user not found' });
+    return;
+  }
+
+  res.send(user);
+}
