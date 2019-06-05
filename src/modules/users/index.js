@@ -7,6 +7,12 @@ async function routes(fastify) {
     { schema: schemas.getUserProducts },
     handlers.getUserProducts,
   );
+
+  fastify.get(
+    '/users/:userId',
+    { schema: schemas.getUser },
+    handlers.getUser,
+  );
 }
 
 export default routes;
