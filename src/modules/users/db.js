@@ -25,15 +25,17 @@ export function createUser({
 }
 
 export function getUser(userId) {
-  return get(sql`SELECT * FROM views.users WHERE id = $1`, [userId]);
+  return get(sql`SELECT * FROM views.users_location WHERE id = $1`, [userId]);
 }
 
 export function getUserByEmail(email) {
-  return get(sql`SELECT * FROM views.users WHERE email = $1`, [email]);
+  return get(sql`SELECT * FROM views.users_location WHERE email = $1`, [
+    email,
+  ]);
 }
 
 export function updateUser({
-  userId, fullName, avatar, phone,
+  userId, fullName, avatar, phone, location,
 }) {
   const query = sql`
     UPDATE users
@@ -41,10 +43,11 @@ export function updateUser({
       full_name = $2,
       avatar = $3,
       phone = $4,
+      location = $5,
       updated_at = CURRENT_TIMESTAMP
     WHERE id = $1
     RETURNING *;
   `;
 
-  return get(query, [userId, fullName, avatar, phone]);
+  return get(query, [userId, fullName, avatar, phone, location]);
 }
