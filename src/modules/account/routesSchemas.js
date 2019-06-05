@@ -1,4 +1,5 @@
 import * as userSchemas from 'users/schemas';
+import { bearerAuth } from 'common/schemas';
 
 export const getAccount = {
   tags: ['user'],
@@ -23,6 +24,6 @@ export const updateAccount = {
   response: {
     200: userSchemas.user,
   },
-  security: [{ bearerAuth: [] }],
+  ...bearerAuth,
   description: 'Update user account',
 };

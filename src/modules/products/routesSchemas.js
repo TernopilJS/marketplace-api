@@ -1,4 +1,5 @@
 import * as chatSchemas from 'chats/schemas';
+import { bearerAuth } from 'common/schemas';
 import * as schemas from './schemas';
 
 export const getLatestProducts = {
@@ -45,7 +46,7 @@ export const createProduct = {
   response: {
     200: schemas.product,
   },
-  security: [{ bearerAuth: [] }],
+  ...bearerAuth,
   description: 'Create new product',
 };
 
@@ -60,6 +61,6 @@ export const createChat = {
   response: {
     200: chatSchemas.chat,
   },
-  security: [{ bearerAuth: [] }],
+  ...bearerAuth,
   description: 'Create chat related to the product',
 };
