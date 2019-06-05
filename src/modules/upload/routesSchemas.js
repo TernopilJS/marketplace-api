@@ -1,10 +1,12 @@
+import { bearerAuth } from 'common/schemas';
+
 export const upload = {
   consumes: ['multipart/form-data'],
   tags: ['upload'],
   response: {
     200: { type: 'string' },
   },
-  security: [{ bearerAuth: [] }],
+  ...bearerAuth,
 };
 
 export const uploadImage = {

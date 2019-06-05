@@ -49,7 +49,8 @@ export async function createMessage(req, res) {
 
 export async function getMessages(req, res) {
   const { chatId } = req.params;
+  const { limit, from } = req.query;
 
-  const messages = await db.getMessages(chatId);
+  const messages = await db.getMessages({ chatId, limit, from });
   res.send(messages);
 }

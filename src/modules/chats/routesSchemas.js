@@ -1,3 +1,4 @@
+import { bearerAuth, paginationFrom } from 'common/schemas';
 import * as schemas from './schemas';
 
 export const getChats = {
@@ -8,7 +9,7 @@ export const getChats = {
       items: schemas.chatWithProductMessageParticipants,
     },
   },
-  security: [{ bearerAuth: [] }],
+  ...bearerAuth,
   description: 'Get user chats',
 };
 
@@ -30,12 +31,13 @@ export const createMessage = {
   response: {
     200: schemas.message,
   },
-  security: [{ bearerAuth: [] }],
+  ...bearerAuth,
   description: 'Send message',
 };
 
 export const getMessages = {
   tags: ['chat'],
+  ...paginationFrom,
   params: {
     type: 'object',
     properties: {
@@ -48,6 +50,6 @@ export const getMessages = {
       items: schemas.message,
     },
   },
-  security: [{ bearerAuth: [] }],
+  ...bearerAuth,
   description: 'Get chat messages',
 };

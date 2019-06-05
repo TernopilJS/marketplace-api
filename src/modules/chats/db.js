@@ -39,15 +39,20 @@ export function createMessage({ chatId, userId, text }) {
   return get(query, [chatId, userId, text]);
 }
 
-export function getMessages(chatId) {
+export function getMessages({ chatId, limit, from }) {
   const query = sql`
-    SELECT *
-    FROM views.messages
-    WHERE chat_id = $1
-    ORDER BY created_at DESC;
+    SELECT m.*
+    FROM views.messages AS m
+    WHERE m.chat_id = $1
+      AND CASE WHEN $2::INT IS NOT NULL
+        THEN m.id < $2
+        ELSE TRUE
+      END
+    ORDER BY created_at DESC
+    FETCH FIRST $3 ROWS ONLY;
   `;
 
-  return getList(query, [chatId]);
+  return getList(query, [chatId, from, limit]);
 }
 
 export function createChat({ id, productId, userId }) {
