@@ -14,6 +14,11 @@ export async function createChat(req, res) {
       userId,
     });
 
+    if (!chat) {
+      res.status(409).send({ error: 'Cannot create the chat' });
+      return;
+    }
+
     res.send(chat);
   } catch (error) {
     if (error.constraint === 'chat_user_fk') {
