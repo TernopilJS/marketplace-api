@@ -18,6 +18,7 @@ export const product = {
     price: { type: 'number' },
     createdAt: { type: 'number' },
     updatedAt: { type: ['number', 'null'] },
+    saved: { type: 'boolean', default: false },
   },
 };
 

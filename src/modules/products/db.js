@@ -58,3 +58,34 @@ export function getProductWithChat({ productId, userId }) {
 
   return get(query, [productId, userId]);
 }
+
+export function saveProduct({ productId, userId }) {
+  const query = sql`
+    INSERT INTO
+    saved_products(product_id, owner_id)
+    VALUES ($1, $2)
+  `;
+
+  return get(query, [productId, userId]);
+}
+
+export function unSaveProduct({ productId, userId }) {
+  const query = sql`
+    DELETE FROM saved_products
+    WHERE product_id = $1 AND owner_id = $2
+  `;
+
+  return get(query, [productId, userId]);
+}
+
+export function getSavedProducts({ userId }) {
+  const query = sql`
+    SELECT p.*, TRUE as saved
+    FROM saved_products as s
+      LEFT JOIN views.active_products AS p ON (s.product_id = p.id)
+    WHERE s.owner_id = $1
+    ORDER BY s.created_at DESC
+  `;
+
+  return getList(query, [userId]);
+}

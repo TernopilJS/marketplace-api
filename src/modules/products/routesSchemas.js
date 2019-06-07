@@ -64,3 +64,39 @@ export const createChat = {
   ...bearerAuth,
   description: 'Create chat related to the product',
 };
+
+export const saveProduct = {
+  tags: ['products'],
+  params: {
+    type: 'object',
+    properties: {
+      productId: { type: 'string' },
+    },
+  },
+  ...bearerAuth,
+  description: 'Add product to saved',
+};
+
+export const unSaveProduct = {
+  tags: ['products'],
+  params: {
+    type: 'object',
+    properties: {
+      productId: { type: 'string' },
+    },
+  },
+  ...bearerAuth,
+  description: 'Remove product from saved',
+};
+
+export const getSavedProducts = {
+  tags: ['products'],
+  response: {
+    200: {
+      type: 'array',
+      items: schemas.product,
+    },
+  },
+  ...bearerAuth,
+  description: 'Get saved products',
+};

@@ -6,6 +6,7 @@
     <!-- Tables -->
     <include file="0003_tables/users.sql"/>
     <include file="0003_tables/products.sql"/>
+    <include file="0003_tables/products/saved_products.sql"/>
 
     <include file="0003_tables/chats/chats.sql"/>
     <include file="0003_tables/chats/messages.sql"/>
