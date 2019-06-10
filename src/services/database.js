@@ -69,8 +69,8 @@ export function safeParams(params) {
   }, []);
 }
 
-export function useIf(condition, queryToUse, defaultQuery = '') {
-  if (condition) {
+export function ifDef(value, queryToUse, defaultQuery = '') {
+  if (typeof value !== 'undefined') {
     return queryToUse;
   }
 

@@ -1,13 +1,13 @@
 import * as productDb from 'products/db';
 import {
-  get, getList, sql, useIf,
+  get, getList, sql, ifDef,
 } from '../../services/database';
 
 export function getChats(userId) {
   const query = sql`
     SELECT
       c.*,
-      ${useIf(userId, productDb.getProductJsonWithSaved('c.product', '$1'))}
+      ${ifDef(userId, productDb.getProductJsonWithSaved('c.product', '$1'))}
       c.participants as participantsIds,
       users.participants as participants
     FROM views.chats_with_product_and_message as c

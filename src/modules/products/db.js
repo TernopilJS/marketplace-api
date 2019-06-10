@@ -1,5 +1,5 @@
 import {
-  get, getList, sql, safeParams, useIf,
+  get, getList, sql, safeParams, ifDef,
 } from '../../services/database';
 
 export function getProductJsonWithSaved(productJson, paramName) {
@@ -58,7 +58,7 @@ export function createProduct({
 export function getLatestProducts(userId) {
   const query = sql`
     SELECT
-      ${useIf(userId, getProductSavedState('$1'))}
+      ${ifDef(userId, getProductSavedState('$1'))}
       p.*
     FROM views.active_products as p
     ORDER BY created_at DESC
@@ -81,7 +81,7 @@ export function getProductById({ productId }) {
 export function getProductWithChat({ productId, userId }) {
   const query = sql`
     SELECT
-      ${useIf(userId, getProductSavedState('$2'))}
+      ${ifDef(userId, getProductSavedState('$2'))}
       p.*,
       c.id AS chat_id
     FROM views.active_products_with_user AS p
@@ -145,7 +145,7 @@ export function saveMultipleProducts({ userId, ids }) {
 export function getProductsByIds({ userId, ids }) {
   const query = sql`
     SELECT
-      ${useIf(userId, getProductSavedState('$2'))}
+      ${ifDef(userId, getProductSavedState('$2'))}
       p.*
     FROM UNNEST($1::UUID[]) AS ids
       LEFT JOIN views.active_products AS p ON (p.id = ids)
