@@ -68,3 +68,11 @@ export function safeParams(params) {
     return acc;
   }, []);
 }
+
+export function useIf(condition, queryToUse, defaultQuery = '') {
+  if (condition) {
+    return queryToUse;
+  }
+
+  return defaultQuery;
+}

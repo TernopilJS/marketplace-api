@@ -1,9 +1,9 @@
 import {
-  get, getList, sql, safeParams,
+  get, getList, sql, safeParams, useIf,
 } from '../../services/database';
 
-export function getProductJsonWithSaved(condition, productJson, paramName) {
-  const withSaved = sql`
+export function getProductJsonWithSaved(productJson, paramName) {
+  return sql`
     (
       ${productJson}::jsonb ||
       json_build_object(
@@ -16,20 +16,16 @@ export function getProductJsonWithSaved(condition, productJson, paramName) {
       )::jsonb
     ) as product,
   `;
-
-  return condition ? withSaved : '';
 }
 
-export function getProductSavedState(condition, paramName) {
-  const withSaved = sql`
+export function getProductSavedState(paramName) {
+  return sql`
     EXISTS(
       SELECT * FROM saved_products AS s
       WHERE s.product_id = p.id
         AND s.owner_id = ${paramName}
     ) AS saved,
   `;
-
-  return condition ? withSaved : '';
 }
 
 export function createProduct({
@@ -62,7 +58,7 @@ export function createProduct({
 export function getLatestProducts(userId) {
   const query = sql`
     SELECT
-      ${getProductSavedState(userId, '$1')}
+      ${useIf(userId, getProductSavedState('$1'))}
       p.*
     FROM views.active_products as p
     ORDER BY created_at DESC
@@ -85,7 +81,7 @@ export function getProductById({ productId }) {
 export function getProductWithChat({ productId, userId }) {
   const query = sql`
     SELECT
-      ${getProductSavedState(userId, '$2')}
+      ${useIf(userId, getProductSavedState('$2'))}
       p.*,
       c.id AS chat_id
     FROM views.active_products_with_user AS p
@@ -149,7 +145,7 @@ export function saveMultipleProducts({ userId, ids }) {
 export function getProductsByIds({ userId, ids }) {
   const query = sql`
     SELECT
-      ${getProductSavedState(userId, '$2')}
+      ${useIf(userId, getProductSavedState('$2'))}
       p.*
     FROM UNNEST($1::UUID[]) AS ids
       LEFT JOIN views.active_products AS p ON (p.id = ids)

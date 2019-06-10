@@ -1,13 +1,13 @@
 import * as productDb from 'products/db';
 import {
-  get, getList, sql, safeParams,
+  get, getList, sql, safeParams, useIf,
 } from '../../services/database';
 
 export function getUserProducts({ userId, sessionUserId }) {
   const query = sql`
     SELECT
-      ${productDb.getProductSavedState(sessionUserId, '$2')}
       p.*,
+      ${useIf(sessionUserId, productDb.getProductSavedState('$2'))}
       count(*) over () as count
     FROM views.active_products as p
     WHERE p.owner_id = $1
