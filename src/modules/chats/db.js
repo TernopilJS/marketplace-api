@@ -5,7 +5,18 @@ export function getChats(userId) {
     SELECT
       c.*,
       c.participants as participantsIds,
-      users.participants as participants
+      users.participants as participants,
+      (
+        c.product::jsonb ||
+        json_build_object(
+          'saved',
+          EXISTS(
+            SELECT * FROM saved_products AS s
+            WHERE s.product_id = (c.product->>'id')::UUID
+              AND s.owner_id = '14289d7a-af06-49c5-9286-4a260b748f53'::UUID
+          )
+        )::jsonb
+      ) as product
     FROM views.chats_with_product_and_message as c
       LEFT JOIN lateral (
         SELECT

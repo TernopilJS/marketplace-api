@@ -60,3 +60,11 @@ export function sql(strings, ...options) {
     '',
   );
 }
+
+export function safeParams(params) {
+  return params.reduce((acc, value) => {
+    if (value) acc.push(value);
+
+    return acc;
+  }, []);
+}

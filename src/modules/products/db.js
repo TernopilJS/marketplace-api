@@ -1,4 +1,18 @@
-import { get, getList, sql } from '../../services/database';
+import {
+  get, getList, sql, safeParams,
+} from '../../services/database';
+
+export function getProductSavedState(condition, paramName) {
+  const withSaved = sql`
+    EXISTS(
+      SELECT * FROM saved_products AS s
+      WHERE s.product_id = p.id
+        AND s.owner_id = ${paramName}
+    ) AS saved,
+  `;
+
+  return condition ? withSaved : '';
+}
 
 export function createProduct({
   id,
@@ -27,14 +41,17 @@ export function createProduct({
   ]);
 }
 
-export function getLatestProducts() {
+export function getLatestProducts(userId) {
   const query = sql`
-    SELECT * FROM views.active_products
+    SELECT
+      ${getProductSavedState(userId, '$1')}
+      p.*
+    FROM views.active_products as p
     ORDER BY created_at DESC
     FETCH FIRST 20 ROWS ONLY;
   `;
 
-  return getList(query);
+  return getList(query, safeParams([userId]));
 }
 
 export function getProductById({ productId }) {
@@ -49,7 +66,10 @@ export function getProductById({ productId }) {
 
 export function getProductWithChat({ productId, userId }) {
   const query = sql`
-    SELECT p.*, c.id as chat_id
+    SELECT
+      ${getProductSavedState(userId, '$2')}
+      p.*,
+      c.id AS chat_id
     FROM views.active_products_with_user AS p
       LEFT JOIN chat.chats AS c
         ON (c.product_id = p.id AND c.owner_id = $2)
@@ -62,8 +82,12 @@ export function getProductWithChat({ productId, userId }) {
 export function saveProduct({ productId, userId }) {
   const query = sql`
     INSERT INTO
-    saved_products(product_id, owner_id)
-    VALUES ($1, $2)
+      saved_products(product_id, owner_id)
+    SELECT $1, $2
+    FROM products AS p
+    WHERE p.id = $1
+      AND NOT p.owner_id = $2
+    RETURNING *
   `;
 
   return get(query, [productId, userId]);
@@ -88,4 +112,31 @@ export function getSavedProducts({ userId }) {
   `;
 
   return getList(query, [userId]);
+}
+
+export function saveMultipleProducts({ userId, ids }) {
+  const query = sql`
+    INSERT INTO
+      saved_products(product_id, owner_id)
+    SELECT p.id, $2
+    FROM UNNEST($1::UUID[]) AS ids
+      LEFT JOIN products AS p ON (p.id = ids)
+    WHERE NOT p.owner_id = $2
+    RETURNING *
+  `;
+
+  return get(query, [ids, userId]);
+}
+
+export function getProductsByIds({ userId, ids }) {
+  const query = sql`
+    SELECT
+      ${getProductSavedState(userId, '$2')}
+      p.*
+    FROM UNNEST($1::UUID[]) AS ids
+      LEFT JOIN views.active_products AS p ON (p.id = ids)
+    ORDER BY created_at DESC;
+  `;
+
+  return getList(query, safeParams([ids, userId]));
 }

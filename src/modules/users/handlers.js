@@ -3,11 +3,12 @@ import * as db from './db';
 
 export async function getUserProducts(req, res) {
   const { userId } = req.params;
+  const sessionUserId = _.get('user.userId')(req);
 
-  const products = await db.getUserProducts(userId);
+  const products = await db.getUserProducts({ userId, sessionUserId });
   const count = _.getOr(0, '[0].count')(products);
 
-  res.send({ list: products, count });
+  res.send({ count, list: products });
 }
 
 export async function getUser(req, res) {

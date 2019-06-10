@@ -44,6 +44,18 @@ async function routes(fastify) {
     { schema: schemas.getSavedProducts, onRequest: requiredAuth },
     handlers.getSavedProducts,
   );
+
+  fastify.post(
+    '/products/saved',
+    { schema: schemas.saveMultipleProducts, onRequest: requiredAuth },
+    handlers.saveMultipleProducts,
+  );
+
+  fastify.get(
+    '/products/ids',
+    { schema: schemas.getProductsByIds, onRequest: optionalAuth },
+    handlers.getProductsByIds,
+  );
 }
 
 export default routes;

@@ -100,3 +100,46 @@ export const getSavedProducts = {
   ...bearerAuth,
   description: 'Get saved products',
 };
+
+export const saveMultipleProducts = {
+  tags: ['products'],
+  body: {
+    type: 'object',
+    properties: {
+      ids: {
+        type: 'array',
+        items: { type: 'string' },
+      },
+    },
+    required: ['ids'],
+  },
+  ...bearerAuth,
+  description: 'Save multiple products by ids',
+};
+
+export const getProductsByIds = {
+  tags: ['products'],
+  querystring: {
+    type: 'object',
+    properties: {
+      id: {
+        anyOf: [
+          {
+            type: 'array',
+            items: { type: 'string' },
+          },
+          { type: 'string' },
+        ],
+        description: 'Products ids to fetch.',
+      },
+    },
+    required: ['id'],
+  },
+  response: {
+    200: {
+      type: 'array',
+      items: schemas.product,
+    },
+  },
+  description: 'Get multiple products by ids',
+};
