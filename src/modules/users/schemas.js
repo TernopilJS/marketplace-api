@@ -3,7 +3,7 @@ export const user = {
   properties: {
     id: { type: 'string' },
     fullName: { type: 'string' },
-    email: { type: 'string' },
+    location: { type: ['string', 'null'] },
     avatar: { type: ['string', 'null'] },
     phone: { type: ['string', 'null'] },
     createdAt: { type: 'number' },
@@ -16,5 +16,13 @@ export const userWithToken = {
   properties: {
     token: { type: 'string' },
     user,
+  },
+};
+
+export const userAccount = {
+  type: 'object',
+  properties: {
+    ...user.properties,
+    email: { type: 'string' },
   },
 };

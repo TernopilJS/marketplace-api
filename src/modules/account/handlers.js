@@ -15,13 +15,16 @@ export async function getAccount(req, res) {
 
 export async function updateAccount(req, res) {
   const { userId } = req.user;
-  const { avatar, fullName, phone } = req.body;
+  const {
+    avatar, fullName, phone, location,
+  } = req.body;
 
   const updatedUser = await userDb.updateUser({
     userId,
     fullName,
     avatar,
     phone,
+    location,
   });
 
   if (!updatedUser) {
