@@ -2,6 +2,24 @@ import {
   get, getList, sql, safeParams,
 } from '../../services/database';
 
+export function getProductJsonWithSaved(condition, productJson, paramName) {
+  const withSaved = sql`
+    (
+      ${productJson}::jsonb ||
+      json_build_object(
+        'saved',
+        EXISTS(
+          SELECT * FROM saved_products AS s
+          WHERE s.product_id = (${productJson}->>'id')::UUID
+            AND s.owner_id = ${paramName}::UUID
+        )
+      )::jsonb
+    ) as product,
+  `;
+
+  return condition ? withSaved : '';
+}
+
 export function getProductSavedState(condition, paramName) {
   const withSaved = sql`
     EXISTS(
