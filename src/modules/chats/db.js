@@ -68,14 +68,19 @@ export function getMessages({ chatId, limit, from }) {
 
 export function createChat({ id, productId, userId }) {
   const query = sql`
-    WITH participant as (
-      SELECT ARRAY[p.owner_id, $3] as participants
+    WITH data_to_insert as (
+      SELECT
+        $1::UUID,
+        $2::UUID,
+        $3::UUID,
+        ARRAY[p.owner_id, $3] as participants
       FROM products as p
-      WHERE p.id = $2
+      WHERE p.id = $2::UUID
+        AND NOT p.owner_id = $3::UUID
     )
     INSERT INTO
     chat.chats(id, product_id, owner_id, participants)
-    (SELECT $1, $2, $3, participants from participant)
+    SELECT * FROM data_to_insert
     RETURNING *;
   `;
 
