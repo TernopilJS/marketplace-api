@@ -1,14 +1,20 @@
-import { get, getList, sql } from '../../services/database';
+import * as productDb from 'products/db';
+import {
+  get, getList, sql, safeParams, ifDef,
+} from '../../services/database';
 
-export function getUserProducts(userId) {
+export function getUserProducts({ userId, sessionUserId }) {
   const query = sql`
-    SELECT *, count(*) over () as count
-    FROM views.active_products
-    WHERE owner_id = $1
-    ORDER BY created_at DESC;
+    SELECT
+      p.*,
+      ${ifDef(sessionUserId, productDb.getProductSavedState('$2'))}
+      count(*) over () as count
+    FROM views.active_products as p
+    WHERE p.owner_id = $1
+    ORDER BY p.created_at DESC;
   `;
 
-  return getList(query, [userId]);
+  return getList(query, safeParams([userId, sessionUserId]));
 }
 
 export function createUser({

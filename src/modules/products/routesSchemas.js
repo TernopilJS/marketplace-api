@@ -64,3 +64,82 @@ export const createChat = {
   ...bearerAuth,
   description: 'Create chat related to the product',
 };
+
+export const saveProduct = {
+  tags: ['products'],
+  params: {
+    type: 'object',
+    properties: {
+      productId: { type: 'string' },
+    },
+  },
+  ...bearerAuth,
+  description: 'Add product to saved',
+};
+
+export const unSaveProduct = {
+  tags: ['products'],
+  params: {
+    type: 'object',
+    properties: {
+      productId: { type: 'string' },
+    },
+  },
+  ...bearerAuth,
+  description: 'Remove product from saved',
+};
+
+export const getSavedProducts = {
+  tags: ['products'],
+  response: {
+    200: {
+      type: 'array',
+      items: schemas.product,
+    },
+  },
+  ...bearerAuth,
+  description: 'Get saved products',
+};
+
+export const saveMultipleProducts = {
+  tags: ['products'],
+  body: {
+    type: 'object',
+    properties: {
+      ids: {
+        type: 'array',
+        items: { type: 'string' },
+      },
+    },
+    required: ['ids'],
+  },
+  ...bearerAuth,
+  description: 'Save multiple products by ids',
+};
+
+export const getProductsByIds = {
+  tags: ['products'],
+  querystring: {
+    type: 'object',
+    properties: {
+      id: {
+        anyOf: [
+          {
+            type: 'array',
+            items: { type: 'string' },
+          },
+          { type: 'string' },
+        ],
+        description: 'Products ids to fetch.',
+      },
+    },
+    required: ['id'],
+  },
+  response: {
+    200: {
+      type: 'array',
+      items: schemas.product,
+    },
+  },
+  description: 'Get multiple products by ids',
+};

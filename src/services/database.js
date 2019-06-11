@@ -60,3 +60,19 @@ export function sql(strings, ...options) {
     '',
   );
 }
+
+export function safeParams(params) {
+  return params.reduce((acc, value) => {
+    if (typeof value !== 'undefined') acc.push(value);
+
+    return acc;
+  }, []);
+}
+
+export function ifDef(value, queryToUse, defaultQuery = '') {
+  if (typeof value !== 'undefined') {
+    return queryToUse;
+  }
+
+  return defaultQuery;
+}

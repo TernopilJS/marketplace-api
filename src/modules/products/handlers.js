@@ -69,7 +69,8 @@ export async function createProduct(req, res) {
 }
 
 export async function getLatestProducts(req, res) {
-  const products = await db.getLatestProducts();
+  const userId = _.get('user.userId')(req);
+  const products = await db.getLatestProducts(userId);
   res.send(products);
 }
 
@@ -87,4 +88,73 @@ export async function getProductById(req, res) {
   }
 
   res.send(product);
+}
+
+export async function saveProduct(req, res) {
+  const { productId } = req.params;
+  const { userId } = req.user;
+
+  try {
+    const saved = await db.saveProduct({ productId, userId });
+
+    if (!saved) {
+      res.status(409).send({ error: 'Cannot save the product' });
+      return;
+    }
+
+    res.status(200).send();
+  } catch (error) {
+    if (error.constraint === 'saved_products_pkey') {
+      res.status(409).send({ error: 'Product already saved' });
+      return;
+    }
+
+    if (error.constraint === 'saved_products_product_fk') {
+      res.status(404).send({ error: 'Product not found' });
+      return;
+    }
+
+    if (error.constraint === 'saved_products_owner_fk') {
+      res.status(403).send({ error: 'Unauthorized' });
+      return;
+    }
+
+    throw error;
+  }
+}
+
+export async function unSaveProduct(req, res) {
+  const { productId } = req.params;
+  const { userId } = req.user;
+
+  await db.unSaveProduct({ productId, userId });
+
+  res.status(200).send();
+}
+
+export async function getSavedProducts(req, res) {
+  const { userId } = req.user;
+
+  const products = await db.getSavedProducts({ userId });
+
+  res.send(products);
+}
+
+export async function saveMultipleProducts(req, res) {
+  const { userId } = req.user;
+  const { ids } = req.body;
+
+  await db.saveMultipleProducts({ userId, ids });
+
+  res.status(200).send();
+}
+
+export async function getProductsByIds(req, res) {
+  const userId = _.get('user.userId')(req);
+  const { id } = req.query;
+  const ids = Array.isArray(id) ? id : [id];
+
+  const products = await db.getProductsByIds({ userId, ids });
+
+  res.send(products);
 }

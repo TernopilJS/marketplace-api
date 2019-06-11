@@ -2,7 +2,7 @@ export const paginationOffset = {
   querystring: {
     type: 'object',
     properties: {
-      offset: { type: 'number', description: 'Offset' },
+      offset: { type: 'number', description: 'Offset', default: 0 },
       limit: { type: 'number', default: 20 },
     },
   },

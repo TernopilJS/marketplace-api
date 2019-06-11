@@ -1,4 +1,3 @@
-import _ from 'lodash/fp';
 import * as userSchemas from 'users/schemas';
 
 export const product = {
@@ -18,14 +17,14 @@ export const product = {
     price: { type: 'number' },
     createdAt: { type: 'number' },
     updatedAt: { type: ['number', 'null'] },
+    saved: { type: 'boolean', default: false },
   },
 };
 
 export const productWithUser = {
   type: 'object',
   properties: {
-    // prettier-ignore
-    ...(_.omit('ownerId')(product.properties)),
+    ...product.properties,
     chatId: { type: ['string', 'null'] },
     owner: userSchemas.user,
   },
