@@ -70,7 +70,9 @@ export async function createProduct(req, res) {
 
 export async function getLatestProducts(req, res) {
   const userId = _.get('user.userId')(req);
-  const products = await db.getLatestProducts(userId);
+  const { limit, offset } = req.query;
+
+  const products = await db.getLatestProducts({ userId, limit, offset });
   res.send(products);
 }
 
@@ -155,6 +157,34 @@ export async function getProductsByIds(req, res) {
   const ids = Array.isArray(id) ? id : [id];
 
   const products = await db.getProductsByIds({ userId, ids });
+
+  res.send(products);
+}
+
+export async function searchProducts(req, res) {
+  const userId = _.get('user.userId')(req);
+  const {
+    keywords, location, priceFrom, priceTo, limit, offset,
+  } = req.query;
+
+  if (!keywords && !location) {
+    res.status(400).send({
+      // prettier-ignore
+      error: 'required at least one of the properties "keywords" or "location"',
+    });
+
+    return;
+  }
+
+  const products = await db.searchProducts({
+    userId,
+    keywords,
+    location,
+    priceFrom,
+    priceTo,
+    limit,
+    offset,
+  });
 
   res.send(products);
 }

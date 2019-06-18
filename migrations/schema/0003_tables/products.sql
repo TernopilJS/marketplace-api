@@ -26,3 +26,21 @@ CREATE TABLE products
 );
 
 --rollback DROP TABLE products;
+
+--changeset oleh:0003_products_keywords splitStatements:false
+ALTER TABLE products
+	ADD COLUMN keywords TEXT;
+
+UPDATE products as p
+	SET keywords =
+		coalesce(p.title,'') || ' ' || coalesce(p.description,'');
+
+SELECT create_concat_columns_trigger('public', 'products', 'keywords', 'title', 'description');
+
+CREATE INDEX product_search_trgm
+	ON products
+	USING GIST (keywords gist_trgm_ops, "location" gist_trgm_ops);
+
+--rollback DROP INDEX product_search_trgm;
+--rollback SELECT drop_concat_columns_trigger('public', 'products');
+--rollback ALTER TABLE products DROP COLUMN keywords;

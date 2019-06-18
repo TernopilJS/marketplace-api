@@ -1,2 +1,2 @@
-release: cd migrations/schema && ./liquibase.groovy update
+release: ./scripts/db_update.sh
 web: node build/main.js

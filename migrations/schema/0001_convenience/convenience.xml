@@ -3,6 +3,10 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
 
+    <include file="0001_convenience/access/concat_columns.sql" />
+    <include file="0001_convenience/access/create_concat_columns_trigger.sql" />
+    <include file="0001_convenience/access/drop_concat_columns_trigger.sql" />
+
     <include file="0001_convenience/validation/alpha.sql" />
     <include file="0001_convenience/validation/alphanum.sql" />
     <include file="0001_convenience/validation/html_escaped.sql" />

@@ -81,3 +81,22 @@ FROM views.active_products AS p
 --rollback FROM products AS p
 --rollback 	LEFT JOIN users AS u ON (p.owner_id = u.id)
 --rollback WHERE p.active = true;
+
+
+--changeset oleh:0004_views.products_with_keywords splitStatements:false
+CREATE VIEW views.products_with_keywords AS
+SELECT
+	p.id,
+	p.owner_id,
+	p.title,
+	p.location,
+	p.price,
+	p.description,
+	p.photos,
+	p.created_at,
+	p.updated_at,
+	p.keywords
+FROM products AS p
+WHERE p.active = true;
+
+--rollback DROP VIEW views.products_with_keywords;

@@ -1,9 +1,10 @@
 import * as chatSchemas from 'chats/schemas';
-import { bearerAuth } from 'common/schemas';
+import { bearerAuth, paginationOffset } from 'common/schemas';
 import * as schemas from './schemas';
 
 export const getLatestProducts = {
   tags: ['products'],
+  ...paginationOffset,
   response: {
     200: {
       type: 'array',
@@ -142,4 +143,25 @@ export const getProductsByIds = {
     },
   },
   description: 'Get multiple products by ids',
+};
+
+export const searchProducts = {
+  tags: ['products'],
+  querystring: {
+    type: 'object',
+    properties: {
+      keywords: { type: 'string' },
+      location: { type: 'string' },
+      priceFrom: { type: 'number' },
+      priceTo: { type: 'number' },
+      ...paginationOffset.querystring.properties,
+    },
+  },
+  response: {
+    200: {
+      type: 'array',
+      items: schemas.product,
+    },
+  },
+  description: 'Search products',
 };
