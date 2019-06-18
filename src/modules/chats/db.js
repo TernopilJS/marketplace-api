@@ -4,10 +4,15 @@ import {
 } from '../../services/database';
 
 export function getChats(userId) {
-  const query = sql`
+  const productWithSaved = productDb.getProductJsonWithSaved(
+    sql`c.product`,
+    userId,
+  );
+
+  const { query, params } = sql`
     SELECT
       c.*,
-      ${ifDef(userId, productDb.getProductJsonWithSaved('c.product', '$1'))}
+      ${ifDef(userId, productWithSaved)}
       c.participants as participantsIds,
       users.participants as participants
     FROM views.chats_with_product_and_message as c
@@ -16,66 +21,65 @@ export function getChats(userId) {
           json_agg(u.user) as participants
         FROM views.users_json as u
         WHERE
-          array_remove(c.participants, $1) @> ARRAY[(u.user->>'id')::UUID]
+          array_remove(c.participants, ${userId}) @>
+          ARRAY[(u.user->>'id')::UUID]
       ) AS users ON TRUE
     WHERE
-      ARRAY[$1::UUID] <@ c.participants
-  `;
+      ARRAY[${userId}::UUID] <@ c.participants
+  `.create();
 
-  return getList(query, [userId]);
+  return getList(query, params);
 }
 
 export function createMessage({ chatId, userId, text }) {
-  const query = sql`
+  const { query, params } = sql`
     WITH insert_data as (
       INSERT INTO
       chat.messages(id, chat_id, owner_id, text)
-      VALUES (seq.next_message_id($1), $1, $2, $3)
+      VALUES (seq.next_message_id(${chatId}), ${chatId}, ${userId}, ${text})
       ON CONFLICT ON CONSTRAINT messages_pk
-        DO UPDATE SET id = seq.next_message_id($1)
+        DO UPDATE SET id = seq.next_message_id(${chatId})
       RETURNING *
     )
-    SELECT i.*, array_remove(c.participants, $2) as participants
+    SELECT i.*, array_remove(c.participants, ${userId}) as participants
     FROM insert_data as i
       LEFT JOIN chat.chats AS c ON (c.id = i.chat_id)
-  `;
+  `.create();
 
-  return get(query, [chatId, userId, text]);
+  return get(query, params);
 }
 
 export function getMessages({ chatId, limit, from }) {
-  const query = sql`
+  const { query, params } = sql`
     SELECT m.*
     FROM views.messages AS m
-    WHERE m.chat_id = $1
-      AND CASE WHEN $2::INT IS NOT NULL
-        THEN m.id < $2
-        ELSE TRUE
-      END
+    WHERE
+      m.chat_id = ${chatId}
+      ${ifDef(from, sql`AND m.id < ${from}`)}
     ORDER BY created_at DESC
-    FETCH FIRST $3 ROWS ONLY;
-  `;
+    FETCH FIRST ${limit} ROWS ONLY;
+  `.create();
 
-  return getList(query, [chatId, from, limit]);
+  return getList(query, params);
 }
 
 export function createChat({ id, productId, userId }) {
-  const query = sql`
+  const { query, params } = sql`
     WITH data_to_insert as (
       SELECT
-        $1::UUID,
-        $2::UUID,
-        $3::UUID,
-        ARRAY[p.owner_id, $3] as participants
+        ${id}::UUID,
+        ${productId}::UUID,
+        ${userId}::UUID,
+        ARRAY[p.owner_id, ${userId}] as participants
       FROM products as p
-      WHERE p.id = $2::UUID
-        AND NOT p.owner_id = $3::UUID
+      WHERE p.id = ${productId}::UUID
+        AND NOT p.owner_id = ${userId}::UUID
     )
     INSERT INTO
     chat.chats(id, product_id, owner_id, participants)
     SELECT * FROM data_to_insert
     RETURNING *;
-  `;
+  `.create();
 
-  return get(query, [id, productId, userId]);
+  return get(query, params);
 }

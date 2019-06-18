@@ -12,8 +12,8 @@ def env = System.getenv()
 
 def credentials = [
     'name'    : env['PGDATABASE'] ?: 'apiko_courses',
-    'user'    : env['PGUSER'] ?: 'apiko_courses',
-    'password': env['PGPASSWORD'] ?: 'apiko_courses',
+    'user'    : env['PGUSER'] ?: 'postgres',
+    'password': env['PGPASSWORD'] ?: '',
     'host'    : env['PGHOST'] ?: 'localhost',
     'port'    : env['PGPORT'] ?: '5432',
     'rootcert': env['PGSSLROOTCERT'] ?: '~/.postgresql/server.crt',

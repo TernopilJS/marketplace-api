@@ -56,6 +56,12 @@ async function routes(fastify) {
     { schema: schemas.getProductsByIds, onRequest: optionalAuth },
     handlers.getProductsByIds,
   );
+
+  fastify.get(
+    '/products/search',
+    { schema: schemas.searchProducts, onRequest: optionalAuth },
+    handlers.searchProducts,
+  );
 }
 
 export default routes;

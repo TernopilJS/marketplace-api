@@ -1,59 +1,65 @@
 import * as productDb from 'products/db';
 import {
-  get, getList, sql, safeParams, ifDef,
+  get, getList, sql, ifDef,
 } from '../../services/database';
 
 export function getUserProducts({ userId, sessionUserId }) {
-  const query = sql`
+  const { query, params } = sql`
     SELECT
       p.*,
-      ${ifDef(sessionUserId, productDb.getProductSavedState('$2'))}
+      ${ifDef(sessionUserId, productDb.getProductSavedState(sessionUserId))}
       count(*) over () as count
     FROM views.active_products as p
-    WHERE p.owner_id = $1
+    WHERE p.owner_id = ${userId}
     ORDER BY p.created_at DESC;
-  `;
+  `.create();
 
-  return getList(query, safeParams([userId, sessionUserId]));
+  return getList(query, params);
 }
 
 export function createUser({
   id, email, fullName, passwordHash, hashFunc,
 }) {
-  const query = sql`
+  const { query, params } = sql`
     INSERT INTO
     users(id, email, full_name, password_hash, password_hash_type)
-    VALUES ($1, $2, $3, $4, $5)
+    VALUES (${id}, ${email}, ${fullName}, ${passwordHash}, ${hashFunc})
     RETURNING *;
-  `;
+  `.create();
 
-  return get(query, [id, email, fullName, passwordHash, hashFunc]);
+  return get(query, params);
 }
 
 export function getUser(userId) {
-  return get(sql`SELECT * FROM views.users_location WHERE id = $1`, [userId]);
+  const { query, params } = sql`
+    SELECT * FROM views.users_location WHERE id = ${userId}
+  `.create();
+
+  return get(query, params);
 }
 
 export function getUserByEmail(email) {
-  return get(sql`SELECT * FROM views.users_location WHERE email = $1`, [
-    email,
-  ]);
+  const { query, params } = sql`
+    SELECT * FROM views.users_location WHERE email = ${email}
+  `.create();
+
+  return get(query, params);
 }
 
 export function updateUser({
   userId, fullName, avatar, phone, location,
 }) {
-  const query = sql`
+  const { query, params } = sql`
     UPDATE users
     SET
-      full_name = $2,
-      avatar = $3,
-      phone = $4,
-      location = $5,
+      full_name = ${fullName},
+      avatar = ${avatar},
+      phone = ${phone},
+      location = ${location},
       updated_at = CURRENT_TIMESTAMP
-    WHERE id = $1
+    WHERE id = ${userId}
     RETURNING *;
-  `;
+  `.create();
 
-  return get(query, [userId, fullName, avatar, phone, location]);
+  return get(query, params);
 }

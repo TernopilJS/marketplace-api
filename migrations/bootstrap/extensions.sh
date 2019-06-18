@@ -15,8 +15,9 @@ alias psql="PGDATABASE=$PGDATABASE \
   PGHOST=$PGHOST \
   PGPORT=$PGPORT psql"
 
-APP="apiko_courses"
-
-psql -c "CREATE DATABASE $APP TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'C' LC_CTYPE = 'C';"
-
-psql --dbname "$APP" -f extensions.sql -At
+if [ "$NODE_ENV" = "production" ]; then
+  psql -f extensions.sql -At
+else
+  APP="apiko_courses"
+  psql --dbname "$APP" -f extensions.sql -At
+fi

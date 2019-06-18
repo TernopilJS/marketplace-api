@@ -42,9 +42,9 @@ export default {
   },
 
   db: {
-    user: process.env.PGUSER || 'apiko_courses',
+    user: process.env.PGUSER || 'postgres',
     database: process.env.PGDATABASE || 'apiko_courses',
-    password: process.env.PGPASSWORD || 'apiko_courses',
+    password: process.env.PGPASSWORD || '',
     host: process.env.PGHOST || 'localhost',
     port: process.env.PGPORT || 5432,
     ssl: process.env.PGSSL || false,
